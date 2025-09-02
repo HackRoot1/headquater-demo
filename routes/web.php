@@ -1,17 +1,21 @@
 <?php
 
+use App\Http\Controllers\ReadyToShip;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\PackagingController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SKUMappingController;
+use App\Http\Controllers\TrackOrderController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ReceivedProductsController;
@@ -197,6 +201,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/purchase-custom-order-store', 'customPurchaseStore')->name('store.purchase.order');
     });
 
+
+    // Check code from here
+
     // received products From Vendors PI Order
     Route::controller(ReceivedProductsController::class)->group(function () {
         Route::get('/received-products', 'index')->name('received-products.index');
@@ -204,6 +211,35 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/received-products', 'update')->name('received-products.update');
         Route::post('/get-vendors', 'getVendors')->name('get.vendors');
         Route::get('/download-received-products-excel', 'downloadReceivedProductsFile')->name('download.received-products.excel');
+    });
+
+    Route::controller(PackagingController::class)->group(function () {
+        Route::get('/packaging-list', 'index')->name('packaging.list.index');
+        Route::get('/packing-products-list/{id}', 'view')->name('packing.products.view');
+    });
+
+    // 
+    Route::controller(ReadyToShip::class)->group(function () {
+        Route::get('/ready-to-ship', 'index')->name('readyToShip.index');
+        Route::get('/ready-to-ship-detail/{id}', 'view')->name('readyToShip.view');
+        Route::get('/ready-to-ship-detail-view/{id}/{c_id}', 'viewDetail')->name('readyToShip.view.detail');
+        Route::get('/product-issues', 'issuesProducts')->name('exceed.shortage.products');
+        Route::get('/return-accept', 'returnAccept')->name('return.accept');
+    });
+
+
+
+    // Track order 
+    Route::controller(TrackOrderController::class)->group(function () {
+        Route::get('/track-order', 'index')->name('trackOrder.index');
+        Route::post('/track-order', 'index')->name('trackOrder.index');
+    });
+
+     // Report Details List
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('/vendor-purchase-history', 'vendorPurchaseHistory')->name('vendor-purchase-history');
+        Route::get('/inventory-stock-history', 'inventoryStockHistory')->name('inventory-stock-history');
+        Route::get('/customer-sales-history', 'customerSalesHistory')->name('customer-sales-history');
     });
 
 
